@@ -1,0 +1,29 @@
+.{
+    .name = .gfuel,
+    .version = "0.0.0",
+    .fingerprint = 0x18de63a7d49c7018,
+    .dependencies = .{
+        // zsync - async runtime support
+        .zsync = .{
+            .url = "https://github.com/ghostkellz/zsync/archive/refs/heads/main.tar.gz",
+            .hash = "zsync-0.5.4-KAuheV0SHQBxubuzXagj1oq5B2KE4VhMWTAAAaInwB2_",
+            .lazy = true, // Only loaded when async features are enabled
+        },
+        .zledger = .{
+            .url = "https://github.com/ghostkellz/zledger/archive/main.tar.gz",
+            .hash = "zledger-0.0.2-gtTGiFdjAgClumjsj0EmGpOjiR9rpCNm83sbK4rP1nVU",
+        },
+        .shroud = .{
+            .url = "https://github.com/ghostkellz/shroud/archive/refs/heads/main.tar.gz",
+            .hash = "shroud-1.2.4-z7C8mXYWBQDnbScUT0wV5HI44ceuV9BYHelv9F-82sqJ",
+        },
+    },
+
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+        "LICENSE",
+        "README.md",
+    },
+}
