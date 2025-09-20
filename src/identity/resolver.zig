@@ -240,12 +240,12 @@ fn calculateNamehash(allocator: Allocator, domain: []const u8) ![]u8 {
     @memset(hash, 0); // Start with zero hash
 
     // Split domain by '.' and process in reverse order
-    var labels = std.ArrayList([]const u8).init(allocator);
-    defer labels.deinit();
+    var labels = std.ArrayList([]const u8){};
+    defer labels.deinit(allocator);
 
     var iterator = std.mem.splitScalar(u8, domain, '.');
     while (iterator.next()) |label| {
-        try labels.append(label);
+        try labels.append(allocator, label);
     }
 
     // Process labels in reverse order (TLD first)

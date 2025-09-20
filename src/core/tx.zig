@@ -1,4 +1,4 @@
-//! Transaction module for Zwallet with RealID signing and verification
+//! Transaction module for GFuel with RealID signing and verification
 //! Handles transaction creation, signing, verification, and serialization
 
 const std = @import("std");
@@ -198,49 +198,49 @@ pub const Transaction = struct {
 
     /// Serialize transaction to bytes
     pub fn serialize(self: Self, allocator: std.mem.Allocator) ![]u8 {
-        var buffer = std.ArrayList(u8).init(allocator);
-        errdefer buffer.deinit();
+        var buffer = std.ArrayList(u8){};
+        errdefer buffer.deinit(allocator);
 
         // Write transaction data in a deterministic order
-        try buffer.appendSlice(std.mem.asBytes(&self.version));
-        try buffer.appendSlice(std.mem.asBytes(&self.timestamp));
-        try buffer.appendSlice(std.mem.asBytes(&self.nonce));
+        try buffer.appendSlice(allocator, std.mem.asBytes(&self.version));
+        try buffer.appendSlice(allocator, std.mem.asBytes(&self.timestamp));
+        try buffer.appendSlice(allocator, std.mem.asBytes(&self.nonce));
 
         // Transaction type and protocol as strings for consistency
         const tx_type_str = @tagName(self.tx_type);
-        try buffer.appendSlice(std.mem.asBytes(&@as(u32, @intCast(tx_type_str.len))));
-        try buffer.appendSlice(tx_type_str);
+        try buffer.appendSlice(allocator, std.mem.asBytes(&@as(u32, @intCast(tx_type_str.len))));
+        try buffer.appendSlice(allocator, tx_type_str);
 
         const protocol_str = @tagName(self.protocol);
-        try buffer.appendSlice(std.mem.asBytes(&@as(u32, @intCast(protocol_str.len))));
-        try buffer.appendSlice(protocol_str);
+        try buffer.appendSlice(allocator, std.mem.asBytes(&@as(u32, @intCast(protocol_str.len))));
+        try buffer.appendSlice(allocator, protocol_str);
 
         // Addresses
-        try buffer.appendSlice(std.mem.asBytes(&@as(u32, @intCast(self.from_address.len))));
-        try buffer.appendSlice(self.from_address);
-        try buffer.appendSlice(std.mem.asBytes(&@as(u32, @intCast(self.to_address.len))));
-        try buffer.appendSlice(self.to_address);
+        try buffer.appendSlice(allocator, std.mem.asBytes(&@as(u32, @intCast(self.from_address.len))));
+        try buffer.appendSlice(allocator, self.from_address);
+        try buffer.appendSlice(allocator, std.mem.asBytes(&@as(u32, @intCast(self.to_address.len))));
+        try buffer.appendSlice(allocator, self.to_address);
 
         // Amounts
-        try buffer.appendSlice(std.mem.asBytes(&self.amount));
-        try buffer.appendSlice(std.mem.asBytes(&self.fee));
+        try buffer.appendSlice(allocator, std.mem.asBytes(&self.amount));
+        try buffer.appendSlice(allocator, std.mem.asBytes(&self.fee));
 
         // Optional fields
         if (self.contract_data) |data| {
-            try buffer.appendSlice(std.mem.asBytes(&@as(u32, @intCast(data.len))));
-            try buffer.appendSlice(data);
+            try buffer.appendSlice(allocator, std.mem.asBytes(&@as(u32, @intCast(data.len))));
+            try buffer.appendSlice(allocator,data);
         } else {
-            try buffer.appendSlice(std.mem.asBytes(&@as(u32, 0)));
+            try buffer.appendSlice(allocator, std.mem.asBytes(&@as(u32, 0)));
         }
 
         if (self.memo) |memo| {
-            try buffer.appendSlice(std.mem.asBytes(&@as(u32, @intCast(memo.len))));
-            try buffer.appendSlice(memo);
+            try buffer.appendSlice(allocator, std.mem.asBytes(&@as(u32, @intCast(memo.len))));
+            try buffer.appendSlice(allocator,memo);
         } else {
-            try buffer.appendSlice(std.mem.asBytes(&@as(u32, 0)));
+            try buffer.appendSlice(allocator, std.mem.asBytes(&@as(u32, 0)));
         }
 
-        return buffer.toOwnedSlice();
+        return buffer.toOwnedSlice(allocator);
     }
 
     /// Deserialize transaction from bytes

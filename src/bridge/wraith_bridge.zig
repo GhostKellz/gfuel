@@ -1,8 +1,8 @@
 //! Enhanced Web3 bridge server using Wraith's HTTP/3 capabilities
-//! This provides a high-performance, secure gateway for Zwallet's Web3 functionality
+//! This provides a high-performance, secure gateway for GFuel's Web3 functionality
 
 const std = @import("std");
-const zwallet = @import("../root.zig");
+const gfuel = @import("../root.zig");
 const api = @import("api.zig");
 
 // When wraith is available, we'll use:
@@ -10,12 +10,12 @@ const api = @import("api.zig");
 
 pub const WraithBridge = struct {
     allocator: std.mem.Allocator,
-    wallet: *zwallet.Wallet,
+    wallet: *gfuel.Wallet,
     port: u16,
 
     const Self = @This();
 
-    pub fn init(allocator: std.mem.Allocator, wallet: *zwallet.Wallet, port: u16) Self {
+    pub fn init(allocator: std.mem.Allocator, wallet: *gfuel.Wallet, port: u16) Self {
         return Self{
             .allocator = allocator,
             .wallet = wallet,
@@ -123,7 +123,7 @@ pub const WraithBridge = struct {
 
         // Simulate server running
         while (true) {
-            std.time.sleep(1000000000); // 1 second
+            std.Thread.sleep(1000000000); // 1 second
         }
     }
 
@@ -184,7 +184,7 @@ pub const WraithConfig = struct {
     };
 };
 
-pub fn createWraithBridge(allocator: std.mem.Allocator, wallet: *zwallet.Wallet, config: WraithConfig) !WraithBridge {
+pub fn createWraithBridge(allocator: std.mem.Allocator, wallet: *gfuel.Wallet, config: WraithConfig) !WraithBridge {
     return WraithBridge.init(allocator, wallet, config.port);
 }
 
@@ -193,7 +193,7 @@ test "wraith bridge creation" {
     defer _ = gpa.deinit();
     const allocator = gpa.allocator();
 
-    var wallet = try zwallet.Wallet.init(allocator);
+    var wallet = try gfuel.Wallet.init(allocator);
     defer wallet.deinit();
 
     const config = WraithConfig{

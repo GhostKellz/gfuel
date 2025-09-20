@@ -1,7 +1,7 @@
 .{
     .name = .gfuel,
     .version = "0.0.0",
-    .fingerprint = 0x18de63a7d49c7018,
+    .fingerprint = 0xfdc9ecb54bddefb5,
     .dependencies = .{
         // zsync - async runtime support
         .zsync = .{
@@ -10,8 +10,8 @@
             .lazy = true, // Only loaded when async features are enabled
         },
         .zledger = .{
-            .url = "https://github.com/ghostkellz/zledger/archive/main.tar.gz",
-            .hash = "zledger-0.0.2-gtTGiFdjAgClumjsj0EmGpOjiR9rpCNm83sbK4rP1nVU",
+            .url = "https://github.com/ghostkellz/zledger/archive/refs/heads/main.tar.gz",
+            .hash = "zledger-0.4.0-gtTGiD06BABnyQi0FQoom66gEOlxxk1c0k-dtd0n2x6P",
         },
         .shroud = .{
             .url = "https://github.com/ghostkellz/shroud/archive/refs/heads/main.tar.gz",

@@ -1,4 +1,4 @@
-//! Command-line interface for Zwallet v0.3.0
+//! Command-line interface for GFuel v0.3.0
 //! Enhanced with production-ready features and advanced operations
 
 const std = @import("std");
@@ -95,10 +95,10 @@ pub const CLI = struct {
     fn showHelp(self: *CLI) !void {
         _ = self;
         print(
-            \\Zwallet - A Secure, Programmable Wallet for Zig
+            \\GFuel - A Secure, Programmable Wallet for Zig
             \\
             \\USAGE:
-            \\    zwallet <COMMAND> [OPTIONS]
+            \\    gfuel <COMMAND> [OPTIONS]
             \\
             \\COMMANDS:
             \\    generate     Generate new wallet
@@ -114,18 +114,18 @@ pub const CLI = struct {
             \\    help         Show this help
             \\
             \\EXAMPLES:
-            \\    zwallet generate --type ed25519 --name ghostkellz
-            \\    zwallet import --mnemonic "word1 word2 ..."
-            \\    zwallet balance --token gcc
-            \\    zwallet send --to chris.eth --amount 420 --token gcc
-            \\    zwallet bridge --port 8443 --enable-http3
+            \\    gfuel generate --type ed25519 --name ghostkellz
+            \\    gfuel import --mnemonic "word1 word2 ..."
+            \\    gfuel balance --token gcc
+            \\    gfuel send --to chris.eth --amount 420 --token gcc
+            \\    gfuel bridge --port 8443 --enable-http3
             \\
         , .{});
     }
 
     fn showVersion(self: *CLI) !void {
         _ = self;
-        print("Zwallet v0.1.0 - Built with Zig {s}\n", .{@import("builtin").zig_version_string});
+        print("GFuel v0.4.0 - Built with Zig {s}\n", .{@import("builtin").zig_version_string});
     }
 
     fn cmdGenerate(self: *CLI, args: [][:0]u8) !void {
@@ -339,7 +339,7 @@ pub const CLI = struct {
         const port: u16 = 8443;
         const enable_http3 = true;
 
-        print("Starting Zwallet Web3 bridge server...\n", .{});
+        print("Starting GFuel Web3 bridge server...\n", .{});
         print("Port: {}\n", .{port});
         print("HTTP/3 enabled: {}\n", .{enable_http3});
         print("Wraith integration: {s}\n", .{if (enable_http3) "enabled" else "disabled"});

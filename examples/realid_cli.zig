@@ -1,12 +1,14 @@
-//! Example CLI demonstrating RealID-integrated Zwallet functionality
-//! This shows how to use the modular wallet system with RealID passphrases
+//! Example CLI demonstrating Shroud-integrated GFuel functionality
+//! This shows how to use the modular wallet system with Shroud identities
+//! NOTE: This example is currently disabled pending Shroud integration update
 
 const std = @import("std");
 const print = std.debug.print;
-const wallet = @import("wallet_realid.zig");
-const tx = @import("tx.zig");
-const qid = @import("qid.zig");
-const ffi = @import("ffi.zig");
+// TODO: Update to use new GFuel wallet API
+// const wallet = @import("wallet_realid.zig");
+// const tx = @import("tx.zig");
+// const qid = @import("qid.zig");
+// const ffi = @import("ffi.zig");
 
 const Command = enum {
     create,
@@ -22,9 +24,16 @@ const Command = enum {
     help,
 };
 
-const ExampleCLI = struct {
-    allocator: std.mem.Allocator,
-    wallet: ?wallet.Wallet,
+// TODO: Reimplement with new GFuel API
+pub fn main() !void {
+    std.debug.print("This CLI example is temporarily disabled pending Shroud integration update.\n", .{});
+    std.debug.print("Please use the basic_usage or shroud_identity examples instead.\n", .{});
+}
+
+// Legacy CLI structure (commented out for now)
+// const ExampleCLI = struct {
+//     allocator: std.mem.Allocator,
+//     wallet: ?wallet.Wallet,
 
     const Self = @This();
 
@@ -72,10 +81,10 @@ const ExampleCLI = struct {
     fn showHelp(self: *Self) !void {
         _ = self;
         print(
-            \\ZWallet RealID CLI - Secure Wallet with Identity Integration
+            \\GFuel Shroud CLI - Secure Wallet with Privacy Integration
             \\
             \\USAGE:
-            \\    zwallet_cli <COMMAND> [OPTIONS]
+            \\    gfuel_cli <COMMAND> [OPTIONS]
             \\
             \\COMMANDS:
             \\    create       Create new wallet with RealID passphrase
@@ -92,23 +101,23 @@ const ExampleCLI = struct {
             \\
             \\EXAMPLES:
             \\    # Create device-bound wallet
-            \\    zwallet_cli create --passphrase "my_secure_phrase" --name "main_wallet" --device-bound
+            \\    gfuel_cli create --passphrase "my_secure_phrase" --name "main_wallet" --device-bound
             \\    
             \\    # Create account for different protocols
-            \\    zwallet_cli account --protocol ghostchain --keytype ed25519
-            \\    zwallet_cli account --protocol ethereum --keytype secp256k1
+            \\    gfuel_cli account --protocol ghostchain --keytype ed25519
+            \\    gfuel_cli account --protocol ethereum --keytype secp256k1
             \\    
             \\    # Check balance
-            \\    zwallet_cli balance --protocol ghostchain --token gcc
+            \\    gfuel_cli balance --protocol ghostchain --token gcc
             \\    
             \\    # Send transaction
-            \\    zwallet_cli send --to "ghost1abc123" --amount 1000000 --protocol ghostchain
+            \\    gfuel_cli send --to "ghost1abc123" --amount 1000000 --protocol ghostchain
             \\    
             \\    # Show QID
-            \\    zwallet_cli qid
+            \\    gfuel_cli qid
             \\    
             \\    # Sign arbitrary data
-            \\    zwallet_cli sign --data "Hello, GhostNet!"
+            \\    gfuel_cli sign --data "Hello, GhostNet!"
             \\
         );
     }
@@ -461,16 +470,17 @@ const ExampleCLI = struct {
     }
 };
 
-pub fn main() !void {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    defer _ = gpa.deinit();
-    const allocator = gpa.allocator();
-
-    const args = try std.process.argsAlloc(allocator);
-    defer std.process.argsFree(allocator, args);
-
-    var cli = ExampleCLI.init(allocator);
-    defer cli.deinit();
-
-    try cli.run(args);
-}
+// Legacy main function (commented out)
+// pub fn main() !void {
+//     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+//     defer _ = gpa.deinit();
+//     const allocator = gpa.allocator();
+//
+//     const args = try std.process.argsAlloc(allocator);
+//     defer std.process.argsFree(allocator, args);
+//
+//     var cli = ExampleCLI.init(allocator);
+//     defer cli.deinit();
+//
+//     try cli.run(args);
+// }

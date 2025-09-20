@@ -1,5 +1,5 @@
 const std = @import("std");
-const zwallet = @import("zwallet");
+const gfuel = @import("gfuel");
 const print = std.debug.print;
 
 pub fn main() !void {
@@ -18,7 +18,7 @@ pub fn main() !void {
 
     // Check for special flags
     if (std.mem.eql(u8, args[1], "--version")) {
-        print("Zwallet v{s}\n", .{zwallet.version});
+        print("GFuel v{s}\n", .{gfuel.version});
         return;
     }
 
@@ -28,7 +28,7 @@ pub fn main() !void {
     }
 
     // Run CLI
-    var cli = zwallet.CLI.init(allocator);
+    var cli = gfuel.CLI.init(allocator);
     defer cli.deinit();
 
     try cli.run(args);
@@ -36,12 +36,12 @@ pub fn main() !void {
 
 fn showUsage() !void {
     print(
-        \\Zwallet - A Secure, Programmable Wallet for Zig
+        \\GFuel - A Secure, Programmable Wallet for Zig
         \\
         \\USAGE:
-        \\    zwallet <COMMAND> [OPTIONS]
-        \\    zwallet --bridge [--port PORT]
-        \\    zwallet --version
+        \\    gfuel <COMMAND> [OPTIONS]
+        \\    gfuel --bridge [--port PORT]
+        \\    gfuel --version
         \\
         \\COMMANDS:
         \\    generate     Generate new wallet
@@ -60,19 +60,19 @@ fn showUsage() !void {
         \\    --version    Show version
         \\
         \\EXAMPLES:
-        \\    zwallet generate --type ed25519 --name ghostkellz
-        \\    zwallet import --mnemonic "word1 word2 ..."
-        \\    zwallet balance --token gcc
-        \\    zwallet send --to chris.eth --amount 420 --token gcc
-        \\    zwallet --bridge --port 8080
+        \\    gfuel generate --type ed25519 --name ghostkellz
+        \\    gfuel import --mnemonic "word1 word2 ..."
+        \\    gfuel balance --token gcc
+        \\    gfuel send --to chris.eth --amount 420 --token gcc
+        \\    gfuel --bridge --port 8080
         \\
     , .{});
 }
 
 fn startBridgeMode(allocator: std.mem.Allocator) !void {
-    print("Starting Zwallet Web3 Bridge...\n", .{});
+    print("Starting GFuel Web3 Bridge...\n", .{});
 
-    var server = try zwallet.startBridge(allocator, 8080);
+    var server = try gfuel.startBridge(allocator, 8080);
     defer server.deinit();
 
     print("Bridge server running on http://localhost:8080\n", .{});
@@ -80,7 +80,7 @@ fn startBridgeMode(allocator: std.mem.Allocator) !void {
 
     // Keep server running
     while (true) {
-        std.time.sleep(1000000000); // Sleep 1 second
+        std.Thread.sleep(1000000000); // Sleep 1 second
     }
 }
 

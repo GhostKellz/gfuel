@@ -1,4 +1,4 @@
-//! Shroud-based identity and privacy management for ZWallet
+//! Shroud-based identity and privacy management for GFuel
 //! Provides ephemeral identities, privacy tokens, and access control
 
 const std = @import("std");
@@ -39,7 +39,7 @@ pub const ShroudIdentity = struct {
             .mode = mode,
             .identity = identity,
             .guardian = null,
-            .access_tokens = std.ArrayList(shroud.access_token.AccessToken).init(allocator),
+            .access_tokens = std.ArrayList(shroud.access_token.AccessToken){},
             .created_at = std.time.timestamp(),
             .expires_at = switch (mode) {
                 .ephemeral => std.time.timestamp() + 3600, // 1 hour
@@ -75,7 +75,7 @@ pub const ShroudIdentity = struct {
             duration
         );
 
-        try self.access_tokens.append(token);
+        try self.access_tokens.append(self.allocator, token);
         return token;
     }
 
@@ -159,7 +159,7 @@ pub const AccessGuardian = struct {
         return AccessGuardian{
             .allocator = allocator,
             .guardian = guardian,
-            .policies = std.ArrayList(AccessPolicy).init(allocator),
+            .policies = std.ArrayList(AccessPolicy){},
         };
     }
 
@@ -170,7 +170,7 @@ pub const AccessGuardian = struct {
 
     /// Add access policy
     pub fn addPolicy(self: *AccessGuardian, policy: AccessPolicy) !void {
-        try self.policies.append(policy);
+        try self.policies.append(self.allocator, policy);
     }
 
     /// Check if operation is allowed

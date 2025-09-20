@@ -5,7 +5,6 @@ const std = @import("std");
 const Allocator = std.mem.Allocator;
 const crypto = @import("../utils/crypto.zig");
 const keystore = @import("../utils/keystore.zig");
-const zsig = @import("zsig");
 const zledger = @import("zledger");
 const shroud = @import("shroud");
 
@@ -55,10 +54,11 @@ pub const Account = struct {
 
     pub fn init(allocator: Allocator, protocol: Protocol, key_type: KeyType, name: ?[]const u8) !Account {
         // Generate keypair
-        var keypair = try crypto.KeyPair.generate(key_type);
+        var keypair = try crypto.KeyPair.generate(key_type, allocator);
 
         // Generate address from public key (simplified)
-        const address = try generateAddress(allocator, &keypair.public_key, protocol);
+        const pub_key = keypair.publicKey();
+        const address = try generateAddress(allocator, &pub_key, protocol);
 
         return Account{
             .address = address,
@@ -84,14 +84,15 @@ pub const Account = struct {
 
     pub fn getPublicKey(self: *const Account) ?[32]u8 {
         if (self.keypair) |kp| {
-            return kp.public_key;
+            return kp.publicKey();
         }
         return null;
     }
 
     pub fn sign(self: *const Account, message: []const u8, allocator: Allocator) ![]u8 {
         if (self.keypair) |kp| {
-            return try kp.sign(message, allocator);
+            const signature = try kp.sign(message, allocator);
+            return try allocator.dupe(u8, &signature.bytes);
         }
         return WalletError.InvalidKey;
     }
@@ -111,7 +112,7 @@ pub const Wallet = struct {
         return Wallet{
             .allocator = allocator,
             .mode = mode,
-            .accounts = std.ArrayList(Account).init(allocator),
+            .accounts = std.ArrayList(Account){},
             .keystore_path = keystore_path,
             .is_locked = true,
             .master_seed = null,
@@ -124,7 +125,7 @@ pub const Wallet = struct {
         for (self.accounts.items) |*account| {
             account.deinit(self.allocator);
         }
-        self.accounts.deinit();
+        self.accounts.deinit(self.allocator);
 
         // Zero out master seed
         if (self.master_seed) |*seed| {
@@ -194,7 +195,7 @@ pub const Wallet = struct {
         if (self.is_locked) return WalletError.WalletLocked;
 
         const account = try Account.init(self.allocator, protocol, key_type, name);
-        try self.accounts.append(account);
+        try self.accounts.append(self.allocator, account);
     }
 
     /// Get account by address

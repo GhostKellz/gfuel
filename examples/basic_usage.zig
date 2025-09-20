@@ -1,19 +1,19 @@
-//! Example usage of Zwallet library
+//! Example usage of GFuel library
 //! Demonstrates core wallet functionality
 
 const std = @import("std");
-const zwallet = @import("zwallet");
+const gfuel = @import("gfuel");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer _ = gpa.deinit();
     const allocator = gpa.allocator();
 
-    std.debug.print("=== Zwallet Example ===\n\n", .{});
+    std.debug.print("=== GFuel Example ===\n\n", .{});
 
     // 1. Create a new wallet
     std.debug.print("1. Creating new wallet...\n", .{});
-    var wallet = try zwallet.createWallet(allocator, "test_passphrase_123", .hybrid);
+    var wallet = try gfuel.wallet.Wallet.create(allocator, "test_passphrase_123", .hybrid, null);
     defer wallet.deinit();
 
     // 2. Create accounts for different protocols
@@ -35,11 +35,8 @@ pub fn main() !void {
     const test_domains = [_][]const u8{ "vitalik.eth", "brad.crypto", "example.com" };
 
     for (test_domains) |domain| {
-        const address = zwallet.resolveIdentity(allocator, domain) catch |err| {
-            std.debug.print("   {s}: Error - {}\n", .{ domain, err });
-            continue;
-        };
-        defer allocator.free(address);
+        // TODO: Implement identity resolution
+        const address = "placeholder_address";
         std.debug.print("   {s} -> {s}\n", .{ domain, address });
     }
 
@@ -49,7 +46,7 @@ pub fn main() !void {
         const from_account = &wallet.accounts.items[0];
         const to_address = "0x742d35cc6e0c0532e234b37e85e40521a2b5a4b8";
 
-        var tx = try zwallet.transaction.ProtocolFactory.createTransaction(allocator, .ethereum, from_account.address, to_address, 1000000 // 1 token in micro-units
+        var tx = try gfuel.transaction.ProtocolFactory.createTransaction(allocator, .ethereum, from_account.address, to_address, 1000000 // 1 token in micro-units
         );
         defer tx.deinit(allocator);
 
@@ -57,13 +54,13 @@ pub fn main() !void {
         std.debug.print("   Amount: {} {s}\n", .{ tx.amount, tx.currency });
 
         // Calculate and display fee
-        const fee = zwallet.transaction.ProtocolFactory.estimateFee(.ethereum, tx.amount, tx.gas_limit, tx.gas_price);
+        const fee = gfuel.transaction.ProtocolFactory.estimateFee(.ethereum, tx.amount, tx.gas_limit, tx.gas_price);
         std.debug.print("   Estimated fee: {} {s}\n", .{ fee, tx.currency });
     }
 
     // 6. Bridge API example
     std.debug.print("6. Bridge API disabled (wallet type mismatch)...\n", .{});
-    // var bridge = zwallet.Bridge.init(allocator);
+    // var bridge = gfuel.Bridge.init(allocator);
     // defer bridge.deinit();
 
     // bridge.setWallet(&wallet);

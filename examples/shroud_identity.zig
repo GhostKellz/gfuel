@@ -1,10 +1,9 @@
-//! Example usage of ZWallet with Shroud privacy and identity features
+//! Example usage of GFuel with Shroud privacy and identity features
 //! Demonstrates ephemeral identities, privacy tokens, and access control
 
 const std = @import("std");
-const zwallet = @import("zwallet");
+const gfuel = @import("gfuel");
 const shroud = @import("shroud");
-const zsig = @import("zsig");
 const zledger = @import("zledger");
 
 pub fn main() !void {
@@ -12,12 +11,12 @@ pub fn main() !void {
     defer _ = gpa.deinit();
     const allocator = gpa.allocator();
 
-    std.log.info("🛡️  ZWallet Shroud Identity Demo", .{});
+    std.log.info("🛡️  GFuel Shroud Identity Demo", .{});
     std.log.info("===================================", .{});
 
     // Create a privacy-focused wallet
     std.log.info("1. Creating privacy-focused wallet...", .{});
-    var wallet = try zwallet.createWallet(allocator, "privacy_test_passphrase", .privacy_focused);
+    var wallet = try gfuel.wallet.Wallet.create(allocator, "privacy_test_passphrase", .privacy_focused, null);
     defer wallet.deinit();
 
     // Create ephemeral identity for enhanced privacy
@@ -50,7 +49,7 @@ pub fn main() !void {
     std.log.info("   ✅ Guardian configured with user permissions", .{});
 
     // Create transaction with audit trail
-    var transaction = try zwallet.transaction.Transaction.init(
+    var transaction = try gfuel.transaction.Transaction.init(
         allocator,
         .ghostchain,
         "gc1privacy_sender",
@@ -73,7 +72,7 @@ pub fn main() !void {
     try ledger.append(ledger_tx);
     std.log.info("   📋 Transaction logged to audit ledger", .{});
 
-    // Sign transaction with zsig
+    // Sign transaction with zledger integrated signing
     std.log.info("6. Signing transaction...", .{});
     const private_key = "test_private_key_32_bytes_exactly!";
     try transaction.sign(allocator, private_key);
@@ -104,7 +103,7 @@ pub fn main() !void {
         std.log.err("    ❌ Audit trail integrity failed", .{});
     }
 
-    std.log.info("\n🎉 ZWallet Shroud Identity Demo Complete!", .{});
+    std.log.info("\n🎉 GFuel Shroud Identity Demo Complete!", .{});
     std.log.info("Features demonstrated:", .{});
     std.log.info("  • Privacy-focused wallet creation", .{});
     std.log.info("  • Ephemeral identity generation", .{});
@@ -134,10 +133,10 @@ test "guardian access control" {
     try std.testing.expect(has_role);
 }
 
-test "zsig transaction signing" {
+test "zledger transaction signing" {
     const allocator = std.testing.allocator;
     
-    var transaction = try zwallet.transaction.Transaction.init(
+    var transaction = try gfuel.transaction.Transaction.init(
         allocator,
         .ghostchain,
         "test_sender",

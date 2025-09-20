@@ -12,16 +12,14 @@ pub fn build(b: *std.Build) void {
     const optimize = b.standardOptimizeOption(.{});
 
     // Dependencies - all Ghost ecosystem libraries
-    const zsig = b.dependency("zsig", .{ .target = target, .optimize = optimize });
     const zledger = b.dependency("zledger", .{ .target = target, .optimize = optimize });
     const shroud = b.dependency("shroud", .{ .target = target, .optimize = optimize });
 
-    // Zwallet module with dependencies
-    const mod = b.addModule("zwallet", .{
+    // GFuel module with dependencies
+    const mod = b.addModule("gfuel", .{
         .root_source_file = b.path("src/root.zig"),
         .target = target,
         .imports = &.{
-            .{ .name = "zsig", .module = zsig.module("zsig") },
             .{ .name = "zledger", .module = zledger.module("zledger") },
             .{ .name = "shroud", .module = shroud.module("shroud") },
         },
@@ -29,13 +27,13 @@ pub fn build(b: *std.Build) void {
 
     // Executable
     const exe = b.addExecutable(.{
-        .name = "zwallet",
+        .name = "gfuel",
         .root_module = b.createModule(.{
             .root_source_file = b.path("src/main.zig"),
             .target = target,
             .optimize = optimize,
             .imports = &.{
-                .{ .name = "zwallet", .module = mod },
+                .{ .name = "gfuel", .module = mod },
             },
         }),
     });
@@ -101,13 +99,13 @@ pub fn build(b: *std.Build) void {
 
     // Example executable
     const example_exe = b.addExecutable(.{
-        .name = "zwallet_example",
+        .name = "gfuel_example",
         .root_module = b.createModule(.{
             .root_source_file = b.path("examples/basic_usage.zig"),
             .target = target,
             .optimize = optimize,
             .imports = &.{
-                .{ .name = "zwallet", .module = mod },
+                .{ .name = "gfuel", .module = mod },
             },
         }),
     });
@@ -122,16 +120,15 @@ pub fn build(b: *std.Build) void {
 
     // Shroud Identity CLI example  
     const shroud_cli_exe = b.addExecutable(.{
-        .name = "zwallet_shroud_cli",
+        .name = "gfuel_shroud_cli",
         .root_module = b.createModule(.{
             .root_source_file = b.path("examples/shroud_identity.zig"),
             .target = target,
             .optimize = optimize,
             .imports = &.{
                 .{ .name = "shroud", .module = shroud.module("shroud") },
-                .{ .name = "zsig", .module = zsig.module("zsig") },
                 .{ .name = "zledger", .module = zledger.module("zledger") },
-                .{ .name = "zwallet", .module = mod },
+                .{ .name = "gfuel", .module = mod },
             },
         }),
     });
@@ -147,7 +144,7 @@ pub fn build(b: *std.Build) void {
     // TODO: FFI Library disabled due to API compatibility issues
     // Will be re-enabled after API stabilization
     // const ffi_lib = b.addStaticLibrary(.{
-    //     .name = "zwallet_ffi", 
+    //     .name = "gfuel_ffi", 
     //     .root_module = b.createModule(.{
     //         .root_source_file = b.path("src/core/ffi.zig"),
     //         .target = target,

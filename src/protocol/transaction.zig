@@ -1,10 +1,9 @@
-//! Protocol-specific transaction handling with zsig signing and zledger audit trails
+//! Protocol-specific transaction handling with zledger v0.5.0 integrated signing and audit trails
 //! Supports multiple blockchain protocols with privacy-preserving features
 
 const std = @import("std");
 const Allocator = std.mem.Allocator;
 const wallet = @import("../core/wallet.zig");
-const zsig = @import("zsig");
 const zledger = @import("zledger");
 const shroud = @import("shroud");
 
@@ -67,14 +66,14 @@ pub const Transaction = struct {
         return try allocator.dupe(u8, &hash);
     }
 
-    /// Sign transaction with zsig cryptographic signing
+    /// Sign transaction with zledger integrated cryptographic signing
     pub fn sign(self: *Transaction, allocator: Allocator, private_key: []const u8) !void {
         _ = private_key; // TODO: Use for actual signing
         const hash = try self.calculateHash(allocator);
         defer allocator.free(hash);
 
         // Create keypair from private key (simplified for now)
-        // TODO: Implement proper zsig signing
+        // TODO: Implement proper zledger.zsig signing
         const signature_bytes = try allocator.alloc(u8, 64);
         @memset(signature_bytes, 0); // Placeholder signature
         

@@ -44,7 +44,7 @@ pub const Bridge = struct {
             .allocator = allocator,
             .wallet = null,
             .resolver = identity.IdentityResolver.init(allocator),
-            .authorized_origins = std.ArrayList([]const u8).init(allocator),
+            .authorized_origins = std.ArrayList([]const u8){},
         };
     }
 
@@ -52,7 +52,7 @@ pub const Bridge = struct {
         for (self.authorized_origins.items) |origin| {
             self.allocator.free(origin);
         }
-        self.authorized_origins.deinit();
+        self.authorized_origins.deinit(self.allocator);
         self.resolver.deinit();
     }
 
@@ -125,10 +125,10 @@ pub const Bridge = struct {
             return try self.handleWalletAddChain(params);
         } else if (std.mem.eql(u8, method, "wallet_switchEthereumChain")) {
             return try self.handleWalletSwitchChain(params);
-        } else if (std.mem.eql(u8, method, "zwallet_getInfo")) {
-            return try self.handleZwalletGetInfo();
-        } else if (std.mem.eql(u8, method, "zwallet_resolveIdentity")) {
-            return try self.handleZwalletResolveIdentity(params);
+        } else if (std.mem.eql(u8, method, "gfuel_getInfo")) {
+            return try self.handleGfuelGetInfo();
+        } else if (std.mem.eql(u8, method, "gfuel_resolveIdentity")) {
+            return try self.handleGfuelResolveIdentity(params);
         }
 
         return BridgeError.MethodNotFound;
@@ -214,18 +214,18 @@ pub const Bridge = struct {
         return std.json.Value{ .null = {} };
     }
 
-    /// Handle zwallet_getInfo
-    fn handleZwalletGetInfo(self: *Bridge) !std.json.Value {
+    /// Handle gfuel_getInfo
+    fn handleGfuelGetInfo(self: *Bridge) !std.json.Value {
         var info = std.json.ObjectMap.init(self.allocator);
-        try info.put("name", std.json.Value{ .string = "Zwallet" });
+        try info.put("name", std.json.Value{ .string = "GFuel" });
         try info.put("version", std.json.Value{ .string = "0.1.0" });
         try info.put("icon", std.json.Value{ .string = "data:image/png;base64,..." });
 
         return std.json.Value{ .object = info };
     }
 
-    /// Handle zwallet_resolveIdentity
-    fn handleZwalletResolveIdentity(self: *Bridge, params: ?std.json.Value) !std.json.Value {
+    /// Handle gfuel_resolveIdentity
+    fn handleGfuelResolveIdentity(self: *Bridge, params: ?std.json.Value) !std.json.Value {
         if (params == null) {
             return BridgeError.InvalidRequest;
         }

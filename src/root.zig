@@ -1,4 +1,4 @@
-//! Zwallet - A Secure, Programmable Wallet for Zig with Shroud Identity & Privacy
+//! GFuel - A Secure, Programmable Wallet for Zig with Shroud Identity & Privacy
 //! Core wallet functionality with multi-protocol support, cryptographic audit trails, and privacy-preserving identity management
 
 const std = @import("std");

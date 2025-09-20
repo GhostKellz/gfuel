@@ -1,4 +1,4 @@
-//! QID (IPv6-based identity) module for Zwallet
+//! QID (IPv6-based identity) module for GFuel
 //! Generates and manages QID identities derived from RealID public keys
 
 const std = @import("std");

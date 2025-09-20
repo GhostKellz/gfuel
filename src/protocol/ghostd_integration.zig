@@ -1,12 +1,12 @@
-//! GhostChain daemon integration for ZWallet v0.3.0
+//! GhostChain daemon integration for GFuel v0.3.0
 //! Provides seamless integration with ghostd for enhanced privacy and blockchain operations
 
 const std = @import("std");
-const zwallet = @import("../root.zig");
+const gfuel = @import("../root.zig");
 const tx = @import("../core/tx.zig");
+const zledger = @import("zledger");
 const realid = @import("realid");
 const zcrypto = @import("zcrypto");
-const zsig = @import("zsig");
 
 pub const GhostdError = error{
     ConnectionFailed,
@@ -155,7 +155,7 @@ pub const GhostdClient = struct {
         var results = std.ArrayList([]u8).init(self.allocator);
         defer results.deinit();
         
-        // Use zsig v0.3.0 batch signing for efficiency
+        // Use zledger v0.5.0 integrated batch signing for efficiency
         try tx.Transaction.batchSign(transactions, self.wallet_identity.?, self.allocator);
         
         // Submit as batch for better privacy (harder to correlate individual transactions)
@@ -427,14 +427,14 @@ pub const NetworkInfo = struct {
 
 /// Enhanced wallet with ghostd integration
 pub const GhostWallet = struct {
-    base_wallet: zwallet.Wallet,
+    base_wallet: gfuel.Wallet,
     ghostd_client: GhostdClient,
     privacy_enabled: bool,
     
     const Self = @This();
     
     pub fn init(allocator: std.mem.Allocator, config: GhostdConfig) !Self {
-        const base_wallet = try zwallet.createWallet(allocator, .hybrid);
+        const base_wallet = try gfuel.createWallet(allocator, .hybrid);
         const ghostd_client = GhostdClient.init(allocator, config);
         
         return Self{
