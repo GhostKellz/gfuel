@@ -8,7 +8,7 @@
 
 ## 🏡 Purpose & Vision
 
-Zwallet rethinks what a crypto wallet can be:
+GFuel rethinks what a crypto wallet can be:
 
 * Native integration with your system and CLI tools
 * Hardware-backed, passkey-like key storage
@@ -51,21 +51,21 @@ Zwallet rethinks what a crypto wallet can be:
 
 ## 🏛 Architecture
 
-* `zwallet.core` - Core wallet logic (keys, storage, security)
-* `zwallet.protocol` - Blockchain-specific encoding/signing
-* `zwallet.identity` - ENS/UDN and Web2 DNS integrations
-* `zwallet.cli` - Command interface and UX helpers
-* `zwallet.bridge` - Web interface + API layer
+* `gfuel.core` - Core wallet logic (keys, storage, security)
+* `gfuel.protocol` - Blockchain-specific encoding/signing
+* `gfuel.identity` - ENS/UDN and Web2 DNS integrations
+* `gfuel.cli` - Command interface and UX helpers
+* `gfuel.bridge` - Web interface + API layer
 
 ---
 
 ## 🤝 Example Use
 
 ```bash
-zwallet generate --type ed25519 --name ghostkellz
-zwallet import --mnemonic "..."
-zwallet balance --token gcc
-zwallet send --to chris.eth --amount 420 --token gcc
+gfuel generate --type ed25519 --name ghostkellz
+gfuel import --mnemonic "..."
+gfuel balance --token gcc
+gfuel send --to chris.eth --amount 420 --token gcc
 ```
 
 ---
@@ -119,5 +119,5 @@ MIT + Commons Clause for CLI tool to protect distribution monetization (optional
 
 ---
 
-**Zwallet** — Your CLI-native secure vault for the programmable internet.
+**GFuel** — Your CLI-native secure vault for the programmable internet.
 
